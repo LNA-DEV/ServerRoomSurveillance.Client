@@ -1,29 +1,39 @@
 class SensorClient:
-    Room = "Room"
-    BrokerIp = "000.000.000.000"
-    Interval = 5
-    Temperature = 30.2
-    Humidity = 88.34
-    TemperatureLimit = 90.00
-    HumidityLimit = 90.00
+    # Constructor
+    def __init__(self):      
+        self.Room = "Room"
+        self.BrokerIp = "000.000.000.000"
+        self.Interval = 5
+        self.Temperature = 30.2
+        self.Humidity = 88.34
+        self.TemperatureLimit = 90.00
+        self.HumidityLimit = 90.00
+        try:
+            f = open("config.txt", "r")
+            print(f.read()) 
+        except:
+            print("Config files missing, client will shut down")
 
-    def __init__(self):
-        print("Not implemented")
 
     def ReadDataFromSensor(self):
         print("Not implemented")
 
+
     def StatusInfo(self):
         print("Not implemented")
+
 
     def Run(self):
         print("Not implemented")
 
+
     def MessageReceived(self):
         print("Not implemented")
 
+
     def SaveLimits(self):
         print("Not implemented")
+
 
 
 # Test
