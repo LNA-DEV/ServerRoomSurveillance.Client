@@ -4,6 +4,7 @@ from pydoc import cli
 from traceback import print_tb
 import paho.mqtt.client as mqtt
 import time
+from datetime import datetime
 
 class SensorClient:
     # Constructor
@@ -54,7 +55,8 @@ class SensorClient:
         while(True):
             statusInfo = self.StatusInfo()
             self.mqttClient.publish("sensorclient/data", statusInfo)
-            print("Published: " + statusInfo)
+            currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            print(currentDateTime + " Published: " + statusInfo)
             time.sleep(int(self.Interval))
 
 
