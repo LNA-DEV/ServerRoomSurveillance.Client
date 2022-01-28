@@ -50,7 +50,7 @@ class SensorClient:
         status = self.Room + ":" + self.Temperature + ":" + self.Humidity + ":" + self.TemperatureLimit + ":" + self.HumidityLimit
         return status
 
-
+        
     def Run(self):
         while(True):
             statusInfo = self.StatusInfo()
