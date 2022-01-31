@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 
 class SensorClient:
-    # Constructor
+
     def __init__(self):      
         self.Temperature = "30.2"
         self.Humidity = "88.34"
@@ -69,7 +69,7 @@ class SensorClient:
             if self.Humidity >= float(self.HumidityLimit) or self.Temperature >= float(self.TemperatureLimit) or self.AlarmActive:
                 currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 self.mqttClient.publish("sensorclient/alarm", self.Room)
-                print(currentDateTime + " ALARM activated")
+                print(currentDateTime + " ALARM")
                 self.AlarmActive = True
 
 
