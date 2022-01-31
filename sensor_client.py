@@ -88,6 +88,3 @@ class SensorClient:
     def Connect(self):
         self.mqttClient = mqtt.Client("SensorClientRoom" + self.Room)
         self.mqttClient.connect(self.BrokerIp)
-
-
-client = SensorClient()
