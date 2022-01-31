@@ -7,9 +7,9 @@ import paho.mqtt.client as mqtt
 import time
 from datetime import datetime
 
-class SensorClient:
 
-    def __init__(self):      
+class SensorClient:
+    def __init__(self):
         self.Temperature = "30.2"
         self.Humidity = "88.34"
         self.AlarmActive = False
@@ -43,21 +43,28 @@ class SensorClient:
         self.Connect()
         self.Run()
 
-
     def ReadDataFromSensor(self):
         self.Humidity = float(self.Humidity)
         self.Temperature = float(self.Temperature)
         self.Humidity += 1
         self.Temperature += 1
 
-
     def StatusInfo(self):
-        status = self.Room + ":" + str(self.Temperature) + ":" + str(self.Humidity) + ":" + self.TemperatureLimit + ":" + self.HumidityLimit
+        status = (
+            self.Room
+            + ":"
+            + str(self.Temperature)
+            + ":"
+            + str(self.Humidity)
+            + ":"
+            + self.TemperatureLimit
+            + ":"
+            + self.HumidityLimit
+        )
         return status
 
-        
     def Run(self):
-        while(True):
+        while True:
 
             statusInfo = self.StatusInfo()
             self.mqttClient.publish("sensorclient/data", statusInfo)
@@ -66,24 +73,24 @@ class SensorClient:
 
             self.ReadDataFromSensor()
 
-            if self.Humidity >= float(self.HumidityLimit) or self.Temperature >= float(self.TemperatureLimit) or self.AlarmActive:
+            if (
+                self.Humidity >= float(self.HumidityLimit)
+                or self.Temperature >= float(self.TemperatureLimit)
+                or self.AlarmActive
+            ):
                 currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 self.mqttClient.publish("sensorclient/alarm", self.Room)
                 print(currentDateTime + " ALARM")
                 self.AlarmActive = True
 
-
             time.sleep(int(self.Interval))
-
 
     def MessageReceived(self):
         print("Not implemented")
 
-
     def SaveLimits(self):
         f = open("limits.txt", "w")
         f.writelines(self.TemperatureLimit + "\n" + self.HumidityLimit)
-
 
     def Connect(self):
         self.mqttClient = mqtt.Client("SensorClientRoom" + self.Room)
