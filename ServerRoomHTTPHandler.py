@@ -24,8 +24,8 @@ class ServerRoomHTTPHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
             file = open("WebPage/HTML/index.html", "rb")
-            seite = file.read()
-            self.wfile.write(seite)
+            page = file.read()
+            self.wfile.write(page)
 
         if self.path == "/data_request.js":
             self.send_response(200)
@@ -35,13 +35,13 @@ class ServerRoomHTTPHandler(BaseHTTPRequestHandler):
             js = file.read()
             self.wfile.write(js)
 
-        if self.path == "/style.css":
+        if self.path == "/Styles/index.css":
             self.send_response(200)
             self.send_header("Content-type", "text/css")
             self.end_headers()
             file = open("WebPage/Styles/index.css", "rb")
-            cs = file.read()
-            self.wfile.write(cs)
+            css = file.read()
+            self.wfile.write(css)
 
         if self.path == "/data":
             self.send_response(200)
