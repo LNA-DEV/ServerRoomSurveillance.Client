@@ -1,6 +1,7 @@
 from fileinput import close
 from os import stat
 from pydoc import cli
+import this
 from traceback import print_tb
 import paho.mqtt.client as mqtt
 import time
@@ -11,6 +12,7 @@ class SensorClient:
     def __init__(self):      
         self.Temperature = "30.2"
         self.Humidity = "88.34"
+        self.AlarmActive = False
 
         try:
             f = open("config.txt", "r")
@@ -43,20 +45,34 @@ class SensorClient:
 
 
     def ReadDataFromSensor(self):
-        print("Not implemented")
+        self.Humidity = float(self.Humidity)
+        self.Temperature = float(self.Temperature)
+        self.Humidity += 1
+        self.Temperature += 1
 
 
     def StatusInfo(self):
-        status = self.Room + ":" + self.Temperature + ":" + self.Humidity + ":" + self.TemperatureLimit + ":" + self.HumidityLimit
+        status = self.Room + ":" + str(self.Temperature) + ":" + str(self.Humidity) + ":" + self.TemperatureLimit + ":" + self.HumidityLimit
         return status
 
         
     def Run(self):
         while(True):
+
             statusInfo = self.StatusInfo()
             self.mqttClient.publish("sensorclient/data", statusInfo)
             currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             print(currentDateTime + " Published: " + statusInfo)
+
+            self.ReadDataFromSensor()
+
+            if self.Humidity >= float(self.HumidityLimit) or self.Temperature >= float(self.TemperatureLimit) or self.AlarmActive:
+                currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                self.mqttClient.publish("sensorclient/alarm", self.Room)
+                print(currentDateTime + " ALARM activated")
+                self.AlarmActive = True
+
+
             time.sleep(int(self.Interval))
 
 
