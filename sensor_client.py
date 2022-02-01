@@ -97,7 +97,6 @@ class SensorClient:
             ServerRoomHTTPHandler.tlimit = self.TemperatureLimit
             ServerRoomHTTPHandler.hlimit = self.HumidityLimit
 
-
             time.sleep(int(self.Interval))
 
     def MessageReceived(self):
