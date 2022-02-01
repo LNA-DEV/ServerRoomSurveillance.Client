@@ -47,10 +47,10 @@ class ServerRoomHTTPHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            data = json.dumps('{"room": 113, "temp": 25, "humid": 75}')
-            #data = json.dumps('{"room":' + str(ServerRoomHTTPHandler.room) + ', "temp":' + str(
-            #    ServerRoomHTTPHandler.temp) + ', "humid":' + str(ServerRoomHTTPHandler.humid) + ', "tlimit":' + str(
-            #    ServerRoomHTTPHandler.tlimit) + ', "hlimit":' + str(ServerRoomHTTPHandler.hlimit) + '}')
+            #data = json.dumps('{"room": 113, "temp": 25, "humid": 75}')
+            data = json.dumps('{"room":' + str(ServerRoomHTTPHandler.room) + ', "temp":' + str(
+                ServerRoomHTTPHandler.temp) + ', "humid":' + str(ServerRoomHTTPHandler.humid) + ', "tlimit":' + str(
+                ServerRoomHTTPHandler.tlimit) + ', "hlimit":' + str(ServerRoomHTTPHandler.hlimit) + '}')
             self.wfile.write(bytes(data, "utf-8"))
 
     @staticmethod

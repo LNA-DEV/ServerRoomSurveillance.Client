@@ -7,12 +7,20 @@ import paho.mqtt.client as mqtt
 import time
 from datetime import datetime
 
+from ServerRoomHTTPHandler import ServerRoomHTTPHandler
+
 
 class SensorClient:
+
+    hostName = "localhost"
+    serverPort = 1111
+
     def __init__(self):
         self.Temperature = "30.2"
         self.Humidity = "88.34"
         self.AlarmActive = False
+
+        ServerRoomHTTPHandler.run(SensorClient.hostName, SensorClient.serverPort)
 
         try:
             f = open("config.txt", "r")
@@ -82,6 +90,13 @@ class SensorClient:
                 self.mqttClient.publish("sensorclient/alarm", self.Room)
                 print(currentDateTime + " ALARM")
                 self.AlarmActive = True
+
+            ServerRoomHTTPHandler.room = self.Room
+            ServerRoomHTTPHandler.temp = self.Temperature
+            ServerRoomHTTPHandler.humid = self.Humidity
+            ServerRoomHTTPHandler.tlimit = self.TemperatureLimit
+            ServerRoomHTTPHandler.hlimit = self.HumidityLimit
+
 
             time.sleep(int(self.Interval))
 
