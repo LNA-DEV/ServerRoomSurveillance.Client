@@ -1,12 +1,10 @@
 from fileinput import close
 from os import stat
 from pydoc import cli
-import this
 from traceback import print_tb
 import paho.mqtt.client as mqtt
 import time
 from datetime import datetime
-
 from ServerRoomHTTPHandler import ServerRoomHTTPHandler
 
 
