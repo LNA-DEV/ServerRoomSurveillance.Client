@@ -6,17 +6,20 @@ import paho.mqtt.client as mqtt
 import time
 from datetime import datetime
 from ServerRoomHTTPHandler import ServerRoomHTTPHandler
+import RPi.GPIO as GPIO
 
 
 class SensorClient:
-
     hostName = "localhost"
     serverPort = 1111
+    deviceId = "28-3c01f0952d3c"
 
     def __init__(self):
-        self.Temperature = "30.2"
-        self.Humidity = "88.34"
+        self.Temperature = "0.0"
+        self.Humidity = "0.0"
         self.AlarmActive = False
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(16, GPIO.IN)
 
         ServerRoomHTTPHandler.run(SensorClient.hostName, SensorClient.serverPort)
 
@@ -49,11 +52,25 @@ class SensorClient:
         self.Connect()
         self.Run()
 
+    def getTemperature(self):
+        path = f"/sys/bus/w1/devices/" + self.deviceId + "/w1_slave"
+        fin = open(path, "r")
+        fin.readline()
+        line = fin.readline().strip()
+        pos = line.rfind("=") + 1
+        try:
+            temp = float(line[pos:]) / 1000
+        except:
+            temp = float("NaN")
+        fin.close()
+        return temp
+
     def ReadDataFromSensor(self):
-        self.Humidity = float(self.Humidity)
-        self.Temperature = float(self.Temperature)
-        self.Humidity += 1
-        self.Temperature += 1
+        self.Temperature = self.getTemperature()
+        if GPIO.input(16) == GPIO.LOW:
+            self.Humidity = 100
+        else:
+            self.Humidity = 0
 
     def StatusInfo(self):
         status = (
@@ -80,8 +97,8 @@ class SensorClient:
             self.ReadDataFromSensor()
 
             if (
-                self.Humidity >= float(self.HumidityLimit)
-                or self.Temperature >= float(self.TemperatureLimit)
+                float(self.Humidity) >= float(self.HumidityLimit)
+                or float(self.Temperature) >= float(self.TemperatureLimit)
                 or self.AlarmActive
             ):
                 currentDateTime = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
